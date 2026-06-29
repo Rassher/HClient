@@ -1,0 +1,11 @@
+{
+  "providers": [
+    {
+      "type": "ttf",
+      "file": "oyvey:ubuntu.ttf",
+      "shift": [0, 1],
+      "size": 8.0,
+      "oversample": 4.0
+    }
+  ]
+}

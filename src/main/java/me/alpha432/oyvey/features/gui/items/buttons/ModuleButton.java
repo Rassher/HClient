@@ -1,7 +1,11 @@
 package me.alpha432.oyvey.features.gui.items.buttons;
 
+import me.alpha432.oyvey.features.gui.CobblemonSpawnScreen;
+import me.alpha432.oyvey.features.gui.MacroScreen;
 import me.alpha432.oyvey.features.gui.items.Item;
 import me.alpha432.oyvey.features.modules.Module;
+import me.alpha432.oyvey.features.modules.client.CobblemonSpawnModule;
+import me.alpha432.oyvey.features.modules.client.MacroModule;
 import me.alpha432.oyvey.features.settings.Bind;
 import me.alpha432.oyvey.features.settings.Setting;
 import net.minecraft.client.gui.GuiGraphics;
@@ -77,8 +81,14 @@ public class ModuleButton
         super.mouseClicked(mouseX, mouseY, mouseButton);
         if (!this.items.isEmpty()) {
             if (mouseButton == 1 && this.isHovering(mouseX, mouseY)) {
-                this.subOpen = !this.subOpen;
-                mc.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1f));
+                if (this.module instanceof CobblemonSpawnModule csm) {
+                    mc.setScreen(new CobblemonSpawnScreen(csm));
+                } else if (this.module instanceof MacroModule mm) {
+                    mc.setScreen(new MacroScreen(mm));
+                } else {
+                    this.subOpen = !this.subOpen;
+                    mc.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1f));
+                }
             }
             if (this.subOpen) {
                 for (Item item : this.items) {

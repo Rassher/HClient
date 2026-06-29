@@ -23,9 +23,8 @@ public class CriticalsModule extends Module {
                     || !mc.player.onGround()
                     || !(entity instanceof LivingEntity)) return;
 
-            boolean bl = mc.player.horizontalCollision;
-            mc.player.connection.send(new ServerboundMovePlayerPacket.Pos(mc.player.getX(), mc.player.getY() + 0.1f, mc.player.getZ(), false, bl));
-            mc.player.connection.send(new ServerboundMovePlayerPacket.Pos(mc.player.getX(), mc.player.getY(), mc.player.getZ(), false, bl));
+            mc.player.connection.send(new ServerboundMovePlayerPacket.Pos(mc.player.getX(), mc.player.getY() + 0.1f, mc.player.getZ(), false));
+            mc.player.connection.send(new ServerboundMovePlayerPacket.Pos(mc.player.getX(), mc.player.getY(), mc.player.getZ(), false));
             mc.player.crit(entity);
         }
     }

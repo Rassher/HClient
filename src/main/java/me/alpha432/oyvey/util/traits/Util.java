@@ -6,4 +6,6 @@ import net.minecraft.client.Minecraft;
 public interface Util {
     Minecraft mc = Minecraft.getInstance();
     EventBus EVENT_BUS = new EventBus();
+
+    float[] PARTIAL_TICK = {1.0f};
 }

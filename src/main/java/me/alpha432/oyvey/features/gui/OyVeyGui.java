@@ -2,14 +2,12 @@ package me.alpha432.oyvey.features.gui;
 
 import me.alpha432.oyvey.OyVey;
 import me.alpha432.oyvey.features.Feature;
+import me.alpha432.oyvey.util.BuildConfig;
 import me.alpha432.oyvey.features.gui.items.Item;
 import me.alpha432.oyvey.features.gui.items.buttons.ModuleButton;
 import me.alpha432.oyvey.features.modules.Module;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.input.CharacterEvent;
-import net.minecraft.client.input.KeyEvent;
-import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 
 import java.awt.*;
@@ -27,7 +25,7 @@ public class OyVeyGui extends Screen {
     private final ArrayList<Widget> widgets = new ArrayList<>();
 
     public OyVeyGui() {
-        super(Component.literal("OyVey"));
+        super(Component.literal(BuildConfig.NAME));
         setInstance();
         load();
     }
@@ -69,15 +67,15 @@ public class OyVeyGui extends Screen {
     }
 
     @Override
-    public boolean mouseClicked(MouseButtonEvent click, boolean doubled) {
-        this.widgets.forEach(components -> components.mouseClicked((int) click.x(), (int) click.y(), click.button()));
-        return super.mouseClicked(click, doubled);
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        this.widgets.forEach(components -> components.mouseClicked((int) mouseX, (int) mouseY, button));
+        return super.mouseClicked(mouseX, mouseY, button);
     }
 
     @Override
-    public boolean mouseReleased(MouseButtonEvent click) {
-        this.widgets.forEach(components -> components.mouseReleased((int) click.x(), (int) click.y(), click.button()));
-        return super.mouseReleased(click);
+    public boolean mouseReleased(double mouseX, double mouseY, int button) {
+        this.widgets.forEach(components -> components.mouseReleased((int) mouseX, (int) mouseY, button));
+        return super.mouseReleased(mouseX, mouseY, button);
     }
 
     @Override
@@ -91,24 +89,25 @@ public class OyVeyGui extends Screen {
     }
 
     @Override
-    public boolean keyPressed(KeyEvent input) {
-        this.widgets.forEach(component -> component.onKeyPressed(input.input()));
-        return super.keyPressed(input);
+    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+        this.widgets.forEach(component -> component.onKeyPressed(keyCode));
+        return super.keyPressed(keyCode, scanCode, modifiers);
     }
 
     @Override
-    public boolean charTyped(CharacterEvent input) {
-        this.widgets.forEach(component -> component.onKeyTyped(input.codepointAsString(), input.modifiers()));
-        return super.charTyped(input);
+    public boolean charTyped(char chr, int modifiers) {
+        this.widgets.forEach(component -> component.onKeyTyped(String.valueOf(chr), modifiers));
+        return super.charTyped(chr, modifiers);
     }
 
     @Override
     public boolean isPauseScreen() {
         return false;
     }
+
     @Override
     public void renderBackground(GuiGraphics context, int mouseX, int mouseY, float delta) {
-    }//ignore 1.21.8 blur thing
+    }
 
     public final ArrayList<Widget> getComponents() {
         return this.widgets;

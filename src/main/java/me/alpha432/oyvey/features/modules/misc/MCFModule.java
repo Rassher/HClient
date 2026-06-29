@@ -18,7 +18,7 @@ public class MCFModule extends Module {
 
     @Override
     public void onTick() {
-        if (GLFW.glfwGetMouseButton(mc.getWindow().handle(), 2) == 1) {
+        if (GLFW.glfwGetMouseButton(mc.getWindow().getWindow(), 2) == 1) {
             if (!pressed) click();
             pressed = true;
         } else {
@@ -29,7 +29,7 @@ public class MCFModule extends Module {
     private void click() {
         Entity targetedEntity = mc.crosshairPickEntity;
         if (!(targetedEntity instanceof Player)) return;
-        String name = ((Player) targetedEntity).getGameProfile().name();
+        String name = ((Player) targetedEntity).getGameProfile().getName();
 
         if (OyVey.friendManager.isFriend(name)) {
             OyVey.friendManager.removeFriend(name);

@@ -15,7 +15,9 @@
     "render.MixinLevelRenderer",
     "render.MixinDeltaTrackerTimer",
     "render.gui.MixinCommandSuggestions",
-    "render.gui.MixinGui"
+    "render.gui.MixinGui",
+    "render.gui.MixinJoinMultiplayerScreen",
+    "render.gui.MixinTitleScreen"
   ],
   "injectors": {
     "defaultRequire": 1

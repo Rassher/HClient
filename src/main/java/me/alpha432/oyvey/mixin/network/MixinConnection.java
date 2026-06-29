@@ -1,8 +1,8 @@
 package me.alpha432.oyvey.mixin.network;
 
 import io.netty.channel.Channel;
-import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
+import net.minecraft.network.PacketSendListener;
 import me.alpha432.oyvey.event.impl.network.PacketEvent;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.Packet;
@@ -38,7 +38,7 @@ public class MixinConnection {
     }
 
     @Inject(method = "sendPacket", at = @At("HEAD"), cancellable = true)
-    private void sendPacket(Packet<?> packet, ChannelFutureListener callbacks, boolean flush, CallbackInfo ci) {
+    private void sendPacket(Packet<?> packet, PacketSendListener callbacks, boolean flush, CallbackInfo ci) {
         if (this.receiving != PacketFlow.CLIENTBOUND) return;
         try {
             if (EVENT_BUS.post(new PacketEvent.Send(packet))) {

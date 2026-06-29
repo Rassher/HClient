@@ -7,12 +7,16 @@ import me.alpha432.oyvey.event.system.Subscribe;
 import me.alpha432.oyvey.features.gui.HudEditorScreen;
 import me.alpha432.oyvey.features.modules.Module;
 import me.alpha432.oyvey.features.settings.Setting;
+import me.alpha432.oyvey.util.BattleDetector;
 import me.alpha432.oyvey.util.render.RenderUtil;
 import net.minecraft.client.gui.screens.ChatScreen;
 import org.joml.Vector2f;
 
 public abstract class HudModule extends Module {
     public final Setting<Vector2f> pos = vec2f("Position", 0.5f, 0.5f);
+
+    /** True → only renders during a Cobblemon battle. False (default) → hides during battle. */
+    protected boolean showDuringBattle = false;
 
     private float dragX, dragY, width, height;
     private boolean dragging, button;
@@ -40,6 +44,8 @@ public abstract class HudModule extends Module {
 
     @Subscribe
     public void onRender2DHud(Render2DEvent e) {
+        // XOR: hide normal modules in battle, hide battle modules outside battle
+        if (BattleDetector.isInBattle() ^ showDuringBattle) return;
         render(e);
     }
 

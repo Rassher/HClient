@@ -2,7 +2,6 @@ package me.alpha432.oyvey.util;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import me.alpha432.oyvey.features.settings.Bind;
-import net.minecraft.client.input.KeyEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +15,7 @@ public class KeyboardUtil {
     public static String getKeyName(Bind bind) {
         if (bind.isEmpty()) return "NONE";
         if (bind.isMouse()) return "MOUSE" + (-bind.getKey() - 1);
-        return getKeyName(InputConstants.getKey(new KeyEvent(bind.getKey(), 0, 0)));
+        return getKeyName(InputConstants.Type.KEYSYM.getOrCreate(bind.getKey()));
     }
 
     public static String getKeyName(InputConstants.Key key) {

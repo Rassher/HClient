@@ -15,7 +15,7 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ExperienceOrb;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.throwableitemprojectile.ThrownExperienceBottle;
+import net.minecraft.world.entity.projectile.ThrownExperienceBottle;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.block.state.BlockState;
@@ -62,7 +62,7 @@ public class InteractionUtil implements Util {
         InteractionResult result = mc.gameMode.useItemOn(mc.player, hand, new BlockHitResult(
                 Vec3.atCenterOf(pos), direction, pos, false
         ));
-        if (result instanceof InteractionResult.Success success && success.swingSource() != InteractionResult.SwingSource.NONE) {
+        if (result.consumesAction()) {
             mc.player.connection.send(new ServerboundSwingPacket(hand));
         }
     }
@@ -85,7 +85,7 @@ public class InteractionUtil implements Util {
                 airPlace ? Vec3.atCenterOf(pos) : Vec3.atCenterOf(bp).relative(direction.getOpposite(), 0.5),
                 airPlace ? direction : direction.getOpposite(), bp, false
         ));
-        if (result instanceof InteractionResult.Success success && success.swingSource() != InteractionResult.SwingSource.NONE) {
+        if (result.consumesAction()) {
             mc.player.connection.send(new ServerboundSwingPacket(hand));
         }
         return true;
@@ -93,7 +93,7 @@ public class InteractionUtil implements Util {
 
     public static Direction calcSide(BlockPos pos) {
         for (Direction d : Direction.values())
-            if (!mc.level.getBlockState(pos.offset(d.getUnitVec3i())).canBeReplaced()) return d;
+            if (!mc.level.getBlockState(pos.offset(d.getNormal())).canBeReplaced()) return d;
         return null;
     }
 
@@ -102,7 +102,7 @@ public class InteractionUtil implements Util {
     }
 
     public static double getBlockBreakingSpeed(int slot, BlockState block) {
-        double speed = mc.player.getInventory().getNonEquipmentItems().get(slot).getDestroySpeed(block);
+        double speed = mc.player.getInventory().getItem(slot).getDestroySpeed(block);
 
         if (speed > 1) {
             ItemStack tool = mc.player.getInventory().getItem(slot);
@@ -116,8 +116,8 @@ public class InteractionUtil implements Util {
             speed *= 1 + (MobEffectUtil.getDigSpeedAmplification(mc.player) + 1) * 0.2F;
         }
 
-        if (mc.player.hasEffect(MobEffects.MINING_FATIGUE)) {
-            float k = switch (mc.player.getEffect(MobEffects.MINING_FATIGUE).getAmplifier()) {
+        if (mc.player.hasEffect(MobEffects.DIG_SLOWDOWN)) {
+            float k = switch (mc.player.getEffect(MobEffects.DIG_SLOWDOWN).getAmplifier()) {
                 case 0 -> 0.3F;
                 case 1 -> 0.09F;
                 case 2 -> 0.0027F;
@@ -138,7 +138,7 @@ public class InteractionUtil implements Util {
         float hardness = block.getDestroySpeed(null, null);
         if (hardness == -1) return 0;
 
-        speed /= hardness / (!block.requiresCorrectToolForDrops() || mc.player.getInventory().getNonEquipmentItems().get(slot).isCorrectToolForDrops(block) ? 30 : 100);
+        speed /= hardness / (!block.requiresCorrectToolForDrops() || mc.player.getInventory().getItem(slot).isCorrectToolForDrops(block) ? 30 : 100);
 
         float ticks = (float) (Math.floor(1.0f / speed) + 1.0f);
 

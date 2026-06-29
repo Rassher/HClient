@@ -5,11 +5,9 @@ import me.alpha432.oyvey.features.Feature;
 import me.alpha432.oyvey.features.gui.items.buttons.ModuleButton;
 import me.alpha432.oyvey.features.modules.Module;
 import me.alpha432.oyvey.features.modules.client.HudModule;
+import me.alpha432.oyvey.util.BuildConfig;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.input.CharacterEvent;
-import net.minecraft.client.input.KeyEvent;
-import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 
 import java.util.ArrayList;
@@ -23,7 +21,7 @@ public class HudEditorScreen extends Screen {
     public boolean anyHover;
 
     private HudEditorScreen() {
-        super(Component.literal("oyvey-hudeditor"));
+        super(Component.literal(BuildConfig.NAME + "-hudeditor"));
         load();
     }
 
@@ -44,15 +42,15 @@ public class HudEditorScreen extends Screen {
     }
 
     @Override
-    public boolean mouseClicked(MouseButtonEvent click, boolean doubled) {
-        this.components.forEach(component -> component.mouseClicked((int) click.x(), (int) click.y(), click.button()));
-        return super.mouseClicked(click, doubled);
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        this.components.forEach(component -> component.mouseClicked((int) mouseX, (int) mouseY, button));
+        return super.mouseClicked(mouseX, mouseY, button);
     }
 
     @Override
-    public boolean mouseReleased(MouseButtonEvent click) {
-        this.components.forEach(component -> component.mouseReleased((int) click.x(), (int) click.y(), click.button()));
-        return super.mouseReleased(click);
+    public boolean mouseReleased(double mouseX, double mouseY, int button) {
+        this.components.forEach(component -> component.mouseReleased((int) mouseX, (int) mouseY, button));
+        return super.mouseReleased(mouseX, mouseY, button);
     }
 
     @Override
@@ -66,15 +64,15 @@ public class HudEditorScreen extends Screen {
     }
 
     @Override
-    public boolean keyPressed(KeyEvent input) {
-        this.components.forEach(component -> component.onKeyPressed(input.input()));
-        return super.keyPressed(input);
+    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+        this.components.forEach(component -> component.onKeyPressed(keyCode));
+        return super.keyPressed(keyCode, scanCode, modifiers);
     }
 
     @Override
-    public boolean charTyped(CharacterEvent input) {
-        this.components.forEach(component -> component.onKeyTyped(input.codepointAsString(), input.modifiers()));
-        return super.charTyped(input);
+    public boolean charTyped(char chr, int modifiers) {
+        this.components.forEach(component -> component.onKeyTyped(String.valueOf(chr), modifiers));
+        return super.charTyped(chr, modifiers);
     }
 
     @Override
@@ -82,7 +80,7 @@ public class HudEditorScreen extends Screen {
         return false;
     }
 
-    @Override // ignore 1.21.8 menu blur thing
+    @Override
     public void renderBackground(GuiGraphics context, int mouseX, int mouseY, float delta) {
     }
 
@@ -97,4 +95,3 @@ public class HudEditorScreen extends Screen {
         return INSTANCE;
     }
 }
-

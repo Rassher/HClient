@@ -5,7 +5,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import com.mojang.blaze3d.platform.InputConstants;
 import me.alpha432.oyvey.util.traits.Util;
-import net.minecraft.client.input.KeyEvent;
 import org.lwjgl.glfw.GLFW;
 
 public class Bind implements Util {
@@ -46,13 +45,13 @@ public class Bind implements Util {
     public String toString() {
         if (this.isEmpty()) return "None";
         if (this.key < -1) return "Mouse " + (-this.key - 1);
-        return this.capitalise(InputConstants.getKey(new KeyEvent(this.key, 0, 0)).getName().replace("key.keyboard.", ""));
+        return this.capitalise(InputConstants.Type.KEYSYM.getOrCreate(this.key).getName().replace("key.keyboard.", ""));
     }
 
     public boolean isDown() {
         if (this.isEmpty()) return false;
-        if (this.key < -1) return GLFW.glfwGetMouseButton(mc.getWindow().handle(), -this.key - 2) == 1;
-        return GLFW.glfwGetKey(mc.getWindow().handle(), this.getKey()) == 1;
+        if (this.key < -1) return GLFW.glfwGetMouseButton(mc.getWindow().getWindow(), -this.key - 2) == 1;
+        return GLFW.glfwGetKey(mc.getWindow().getWindow(), this.getKey()) == 1;
     }
 
     private String capitalise(String str) {

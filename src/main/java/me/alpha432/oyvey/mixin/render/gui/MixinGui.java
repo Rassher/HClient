@@ -11,6 +11,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import static me.alpha432.oyvey.util.traits.Util.EVENT_BUS;
+import static me.alpha432.oyvey.util.traits.Util.PARTIAL_TICK;
 import static me.alpha432.oyvey.util.traits.Util.mc;
 
 @Mixin(Gui.class)
@@ -18,7 +19,8 @@ public class MixinGui {
 
     @Inject(method = "render", at = @At("RETURN"))
     public void render(GuiGraphics context, DeltaTracker tickCounter, CallbackInfo ci) {
-        boolean debugOpen = mc.debugEntries.isOverlayVisible();
+        PARTIAL_TICK[0] = tickCounter.getGameTimeDeltaPartialTick(true);
+        boolean debugOpen = mc.getDebugOverlay().showDebugScreen();
 
         if (debugOpen) return;
 

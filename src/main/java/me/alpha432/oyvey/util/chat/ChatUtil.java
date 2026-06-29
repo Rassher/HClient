@@ -3,6 +3,7 @@ package me.alpha432.oyvey.util.chat;
 import me.alpha432.oyvey.OyVey;
 import me.alpha432.oyvey.ducks.render.IChatComponent;
 import me.alpha432.oyvey.features.commands.Command;
+import me.alpha432.oyvey.util.BuildConfig;
 import me.alpha432.oyvey.util.TextUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.GuiMessage;
@@ -11,6 +12,8 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MessageSignature;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
+
+import java.awt.Color;
 
 import static me.alpha432.oyvey.util.traits.Util.mc;
 
@@ -50,8 +53,22 @@ public class ChatUtil {
         chat.oyvey$addMessage(new GuiMessage(mc.gui.getGuiTicks(), message, signature, getMessageTag()));
     }
 
+    private static final Color GRADIENT_START = new Color(0x60A5FA); // blue
+    private static final Color GRADIENT_END   = new Color(0xC084FC); // purple
+
     public static Component getClientNameComponent() {
-        return Component.empty().withColor(OyVey.colorManager.getColorAsInt()).append("OyVey");
+        String label = BuildConfig.NAME + " " + BuildConfig.VERSION;
+        MutableComponent result = Component.empty();
+        int len = label.length();
+        for (int i = 0; i < len; i++) {
+            float t = len <= 1 ? 0f : (float) i / (len - 1);
+            int r  = (int)(GRADIENT_START.getRed()   + t * (GRADIENT_END.getRed()   - GRADIENT_START.getRed()));
+            int g  = (int)(GRADIENT_START.getGreen() + t * (GRADIENT_END.getGreen() - GRADIENT_START.getGreen()));
+            int b  = (int)(GRADIENT_START.getBlue()  + t * (GRADIENT_END.getBlue()  - GRADIENT_START.getBlue()));
+            result.append(Component.literal(String.valueOf(label.charAt(i)))
+                    .withStyle(Style.EMPTY.withColor(new Color(r, g, b).getRGB())));
+        }
+        return result;
     }
 
     private static GuiMessageTag getMessageTag() {

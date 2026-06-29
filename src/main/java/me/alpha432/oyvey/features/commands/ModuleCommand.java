@@ -141,7 +141,7 @@ public class ModuleCommand extends Command {
     }
 
     private static ClickEvent suggestCommand(String command) {
-        return new ClickEvent.SuggestCommand(OyVey.commandManager.getCommandPrefix() + command);
+        return new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, OyVey.commandManager.getCommandPrefix() + command);
     }
 
     private static Style styledValue(Setting<?> setting, Style style) {

@@ -52,6 +52,7 @@ dependencies {
 
     include implementation("com.github.cattyngmd.catformat:catformat-core:${project.catformat_version}")
     include modImplementation("com.github.cattyngmd.catformat:catformat-fabric:${project.catformat_version}")
+
 }
 
 processResources {
@@ -82,12 +83,8 @@ java {
     }
 
     // (was: archivesBaseName = project.archives_base_name)
-    withSourcesJar()
 }
 
-sourcesJar {
-    dependsOn(generateBuildConfig)
-}
 
 jar {
     from("LICENSE") {

@@ -1,0 +1,111 @@
+======================================================================
+     LOS 100 SERVIDORES DE MINECRAFT MÁS FAMOSOS Y SU ANTI-CHEAT
+======================================================================
+Escala del Anti-Cheat: 
+3 = Muy Bueno/Excelente | 2 = Decente/Normal | 1 = Flojo/Deficiente
+======================================================================
+
+Nº  | Nombre del Servidor            | IP / Dominio             | Anti-Cheat (1-3)
+----------------------------------------------------------------------
+1   | Hypixel                        | hypixel.net              | 3 (Watchdog / Muy optimizado)
+2   | 2b2t                           | 2b2t.org                 | 1 (Anarquía, parches mínimos)
+3   | CubeCraft Games                | cubecraft.net            | 2 (Sentinel)
+4   | HiveMC (Bedrock)               | geo.hivebedrock.network  | 3 (Muy estricto en Bedrock)
+5   | Mineplex (Reborn)              | mineplex.com             | 2 (En reestructuración)
+6   | Wynncraft                      | play.wynncraft.com       | 2 (Custom para RPG)
+7   | Universocraft                  | mc.universocraft.com     | 2 (Zeus / Ajustado para No-Premium)
+8   | JartexNetwork                  | jartexnetwork.com        | 2 (Polar / Matrix)
+9   | PikaNetwork                    | pikanetwork.net          | 2 (Matrix / Custom)
+10  | Herobrine.org                  | herobrine.org            | 2 (GrimAC / Custom)
+11  | MineBerry                      | mineberry.org            | 1 (Mucho bypass)
+12  | Minemen Club                   | minemen.club             | 3 (AntiCheat-2 / Enfocado a PvP)
+13  | Lunar Network                  | lunar.gg                 | 3 (Muy estricto, enfocado a PvP)
+14  | Viper MC                       | vipermc.net              | 2 (Enfocado a HCF)
+15  | CosmicPvP                      | cosmicpvp.com            | 2 (Custom / Avanzado)
+16  | ManaCube                       | manacube.com             | 2 (Vulcan / Grim)
+17  | BlockSmash                     | blocksmash.net           | 2
+18  | Complex Gaming                 | hub.mc-complex.com       | 2 (Vulcan / Matrix)
+19  | Performium                     | play.performium.net      | 2
+20  | OPBlocks                       | opblocks.com             | 2
+21  | LemonCloud                     | play.lemoncloud.org      | 2
+22  | ExtremeCraft                   | extremecraft.net         | 1 (Bastante antiguo)
+23  | SnapCraft                      | snapcraft.net            | 2
+24  | Minehut                        | minehut.com              | 1 (Depende de la sala del usuario)
+25  | PocketPixels                   | play.pocketpixels.net    | 2
+26  | Skyblock Net                   | skyblock.net             | 2
+27  | CraftRise                      | craftrise.tc             | 3 (Launcher propio con AC)
+28  | SonOyuncu                      | sonoyuncu.network        | 3 (Launcher propio con AC)
+29  | GommeHD                        | gommehd.net              | 3 (Intave / Muy estricto)
+30  | Timolia                        | timolia.de               | 2
+31  | Bederking                      | bederking.net            | 2
+32  | MineSuperior                   | minesuperior.com         | 1
+33  | MC-Complex (Pixelmon)          | pixelmon.mc-complex.com  | 2
+34  | Pokefind                       | play.pokefind.co         | 2
+35  | Pixelmon To Go                 | pixelmontogo.com         | 2
+36  | AsgardCraft                    | mc.asgardcraft.net       | 2
+37  | Librecraft                     | librecraft.com           | 2 (Custom No-Premium)
+38  | Comugamers                     | mc.comugamers.com        | 1
+39  | SoulCraft                      | play.soulcraft.nl        | 2
+40  | SuperCraft                     | play.supercraft.club     | 2
+41  | MunchyMC                       | munchymc.com             | 3 (BadLion AC / Muy técnico)
+42  | InvadedLands                   | invadedlands.net         | 2
+43  | PvP Land                       | pvp.land                 | 3 (Custom para detectar autoclickers)
+44  | Stray Network                  | stray.gg                 | 2
+45  | Sy封x / Silex PvP               | silex.pvp                | 2
+46  | VeltPvP                        | veltpvp.com              | 2
+47  | CavePvP                        | cavepvp.org              | 2
+48  | United Network                 | unitedworld.pro          | 2
+49  | Roxicraft                      | roxicraft.net            | 2
+50  | Akumamc                        | akumamc.net              | 2
+51  | Purple Ore                     | purpleore.com            | 2
+52  | Advancius Network              | mc.advancius.net         | 3 (Buen staff + AC configurado)
+53  | Vulengate                      | play.vulengate.com       | 2
+54  | EarthMC                        | earthmc.net              | 2 (Evita glitches de movimiento)
+55  | TownyCraft                     | townycraft.com           | 2
+56  | MassiveCraft                   | massivecraft.com         | 2
+57  | Origin Realms                  | play.originrealms.com    | 3 (Muy vanilla-customizado, buen AC)
+58  | Monumenta                      | play.servermonumenta.com | 2
+59  | Potterworld MC                 | play.potterworldmc.com   | 2
+60  | The Archon                     | play.thearchon.net       | 2
+61  | SaicoPvP                       | saicopvp.com             | 2
+62  | Desteria                       | pvp.desteria.com         | 2
+63  | Factions Network               | factions.net             | 2
+64  | SkyCraft                       | skycraft.info            | 2
+65  | Crafting Dead                  | craftingdead.net         | 2
+66  | Neo Network                    | neoternet.com            | 2
+67  | itsJerryAndHarry               | play.itsjerryandharry.com| 2
+68  | Datblock                       | play.datblock.com        | 2
+69  | WilderCraft                    | play.wildercraft.net     | 2
+70  | EcoCityCraft                   | ecocitycraft.com         | 2
+71  | Minearchy                      | minearchy.com            | 2
+72  | SunRise                        | play.sunrise.net         | 2
+73  | Really World                   | reallyworld.ru           | 2 (Ajustes estrictos)
+74  | Holy World                     | holyworld.ru             | 2
+75  | MST Network                    | mstnetwork.cz            | 2
+76  | SurvivalDub                    | mc.survivaldub.es        | 2
+77  | Zonacraft                      | zonacraft.net            | 2
+78  | Minecraft Central              | mccentral.org            | 2
+79  | RoyaltyCraft                   | royaltycraft.net         | 2
+80  | SkyKingdoms                    | skykingdoms.net          | 1
+81  | RoxBot                         | roxbot.com               | 2
+82  | NetherGames (Bedrock)          | play.nethergames.org     | 3 (Polar AC muy pulido)
+83  | Lifeboat (Bedrock)             | play.lnsg.net            | 2
+84  | InPvP (Bedrock)                | play.inpvp.net           | 2
+85  | Mineville (Bedrock)            | play.mineville.net       | 2
+86  | Galaxite (Bedrock)             | play.galaxite.net        | 3
+87  | LokaMC                         | lokamc.com               | 3 (Enfocado en rol/PvP limpio)
+88  | Anubis Pixelmon                | play.anubismc.com        | 2
+89  | MirageCraft                    | miragecraft.net          | 2
+90  | PokeSaga                       | pokesaga.org             | 2
+91  | Pixelmon Harmony               | harmony.pixelmon.gg      | 2
+92  | hispanocraft                   | hispanocraft.net         | 2
+93  | RedesMinecraft                 | redesminecraft.com       | 2
+94  | Edawg85 (Creative)             | edawg85.com              | 2
+95  | Creative Network               | creativefun.net          | 2
+96  | BuildMC                        | buildmc.net              | 2
+97  | Brawl                          | brawl.com                | 2
+98  | McPrison                       | mcprison.com             | 2
+99  | TitanCraft                     | titancraft.org           | 1
+100 | KaoshKraft                     | kaoshkraft.net           | 2
+101 | Apex Cobblemon                 | play.apexcobblemon.com   | 1
+======================================================================

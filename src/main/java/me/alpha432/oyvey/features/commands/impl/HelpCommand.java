@@ -116,6 +116,6 @@ public class HelpCommand extends Command {
     }
 
     private static Component suggest(MutableComponent component, String command) {
-        return component.withStyle(s -> s.withClickEvent(new ClickEvent.SuggestCommand(command.formatted())));
+        return component.withStyle(s -> s.withClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, command.formatted())));
     }
 }

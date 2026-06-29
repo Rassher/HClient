@@ -188,7 +188,8 @@ public class Module extends Feature implements Jsonable, Toggleable {
         MOVEMENT("Movement"),
         PLAYER("Player"),
         CLIENT("Client"),
-        HUD("Hud");
+        HUD("Hud"),
+        COBBLEMON("Cobblemon");
 
         private final String name;
 

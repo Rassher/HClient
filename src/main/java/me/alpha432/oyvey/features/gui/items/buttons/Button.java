@@ -5,7 +5,10 @@ import me.alpha432.oyvey.features.gui.OyVeyGui;
 import me.alpha432.oyvey.features.gui.Widget;
 import me.alpha432.oyvey.features.gui.items.Item;
 import me.alpha432.oyvey.features.modules.client.ClickGuiModule;
+import me.alpha432.oyvey.util.ColorUtil;
 import me.alpha432.oyvey.util.render.RenderUtil;
+
+
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.sounds.SoundEvents;
@@ -21,7 +24,21 @@ public class Button
 
     @Override
     public void drawScreen(GuiGraphics context, int mouseX, int mouseY, float partialTicks) {
-        RenderUtil.rect(context, this.x, this.y, this.x + (float) this.width, this.y + (float) this.height - 0.5f, this.getState() ? (!this.isHovering(mouseX, mouseY) ? OyVey.colorManager.getColorWithAlpha(y, ClickGuiModule.getInstance().color.getValue().getAlpha()) : OyVey.colorManager.getColorWithAlpha(y, ClickGuiModule.getInstance().topColor.getValue().getAlpha())) : (!this.isHovering(mouseX, mouseY) ? 0x11555555 : -2007673515));
+        boolean rainbowOn = ClickGuiModule.getInstance().rainbow.getValue();
+        int btnColor;
+        if (this.getState()) {
+            if (rainbowOn) {
+                // Wave: each button offset by Y position so the wave flows top→bottom within each column
+                btnColor = ColorUtil.rainbow((int)((this.x + this.y) * 12)).getRGB();
+            } else {
+                btnColor = this.isHovering(mouseX, mouseY)
+                    ? OyVey.colorManager.getColorWithAlpha(y, ClickGuiModule.getInstance().topColor.getValue().getAlpha())
+                    : OyVey.colorManager.getColorWithAlpha(y, ClickGuiModule.getInstance().color.getValue().getAlpha());
+            }
+        } else {
+            btnColor = this.isHovering(mouseX, mouseY) ? -2007673515 : 0x11555555;
+        }
+        RenderUtil.rect(context, this.x, this.y, this.x + (float) this.width, this.y + (float) this.height - 0.5f, btnColor);
         drawString(this.getName(), this.x + 2.3f, this.y - 2.0f - (float) OyVeyGui.getClickGui().getTextOffset(), this.getState() ? -1 : -5592406);
     }
 
@@ -48,6 +65,13 @@ public class Button
     @Override
     public int getHeight() {
         return 14;
+    }
+
+    protected int activeColor(float x, float y, int alpha) {
+        if (ClickGuiModule.getInstance().rainbow.getValue()) {
+            return ColorUtil.rainbow((int)((x + y) * 12)).getRGB();
+        }
+        return OyVey.colorManager.getColorWithAlpha(y, alpha);
     }
 
     public boolean isHovering(int mouseX, int mouseY) {

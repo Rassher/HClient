@@ -24,10 +24,16 @@ eclipse
 run
 *.bak
 
-# Files from Forge MDK
+# forge
 forge*changelog.txt
 
-# version files
+# mc run dirs
 /HeadlessMC/
 /logs/
 /plugins/
+
+# duplicate of src/main/resources/anticheatlvl.txt
+src/anticheatlvl.txt
+
+# per-player runtime data (never commit)
+hclient/

@@ -22,7 +22,7 @@ import java.util.List;
 
 public class ConfigManager {
     private static final Logger LOGGER = LoggerFactory.getLogger("ConfigManager");
-    private static final Path OYVEY_PATH = FabricLoader.getInstance().getGameDir().resolve("oyvey");
+    private static final Path OYVEY_PATH = FabricLoader.getInstance().getGameDir().resolve("hclient");
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
     private final List<Jsonable> jsonables = new LinkedList<>();
@@ -72,7 +72,7 @@ public class ConfigManager {
             case "Double" -> setting.setValue(element.getAsDouble());
             case "Float" -> setting.setValue(element.getAsFloat());
             case "Integer" -> setting.setValue(element.getAsInt());
-            case "String" -> setting.setValue(element.getAsString().replace("_", " "));
+            case "String" -> setting.setValue(element.getAsString());
             case "Bind" -> setting.setValue(new Bind(element.getAsInt()));
             case "Color" -> {
                 try {
