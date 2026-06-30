@@ -13,8 +13,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.util.OptionalLong;
-
 @Mixin(LoadingOverlay.class)
 public class MixinLoadingOverlay {
 
@@ -23,7 +21,7 @@ public class MixinLoadingOverlay {
     @Shadow @Final private Minecraft minecraft;
     @Shadow @Final private ReloadInstance reload;
     @Shadow private float currentProgress;
-    @Shadow private OptionalLong fadeOutStart;
+    @Shadow private long fadeOutStart;   // -1 = not fading out
     @Shadow @Final private boolean fadeIn;
 
     @Inject(method = "render", at = @At("HEAD"), cancellable = true)
@@ -32,18 +30,15 @@ public class MixinLoadingOverlay {
 
         int sw = this.minecraft.getWindow().getGuiScaledWidth();
         int sh = this.minecraft.getWindow().getGuiScaledHeight();
+
         // Smooth progress
         float target = this.reload.getActualProgress();
         this.currentProgress = this.currentProgress + (target - this.currentProgress) * 0.1f;
 
-        // Alpha for fade in/out
+        // Alpha: fade out when fadeOutStart is set (>= 0)
         float alpha = 1.0f;
-        if (this.fadeIn) {
-            // fade in handled by Minecraft, just keep full alpha
-            alpha = 1.0f;
-        }
-        if (this.fadeOutStart.isPresent()) {
-            long elapsed = System.currentTimeMillis() - this.fadeOutStart.getAsLong();
+        if (this.fadeOutStart >= 0) {
+            long elapsed = System.currentTimeMillis() - this.fadeOutStart;
             alpha = 1.0f - Math.min(1.0f, elapsed / 1000.0f);
         }
 
@@ -63,27 +58,28 @@ public class MixinLoadingOverlay {
         int barY  = sh - 38;
         int fill  = (int)(barW * Math.min(this.currentProgress, 1.0f));
 
-        // Bar track — dark stone
-        int trackColor = (a & 0xFF000000) | 0x1A1A1A;
-        int borderColor= (a & 0xFF000000) | 0x3A5A2A;
-        int fillColor  = (a & 0xFF000000) | 0x4A8A3A;
-        int glowColor  = (a & 0xFF000000) | 0x6ABF55;
+        int trackColor  = applyAlpha(0x1A1A1A, a);
+        int borderColor = applyAlpha(0x3A5A2A, a);
+        int fillColor   = applyAlpha(0x4A8A3A, a);
+        int glowColor   = applyAlpha(0x6ABF55, a);
+        int textColor   = applyAlpha(0xAADD88, a);
 
         // Border
-        g.fill(barX - 1,        barY - 1,        barX + barW + 1, barY + barH + 1, borderColor);
+        g.fill(barX - 1, barY - 1, barX + barW + 1, barY + barH + 1, borderColor);
         // Track
-        g.fill(barX,            barY,            barX + barW,     barY + barH,     trackColor);
+        g.fill(barX, barY, barX + barW, barY + barH, trackColor);
         // Fill
         if (fill > 0) {
-            g.fill(barX,        barY,            barX + fill,     barY + barH,     fillColor);
-            // Highlight top edge
-            g.fill(barX,        barY,            barX + fill,     barY + 2,        glowColor);
+            g.fill(barX, barY, barX + fill, barY + barH, fillColor);
+            g.fill(barX, barY, barX + fill, barY + 2, glowColor); // highlight
         }
 
-        // Percentage text
+        // Percentage
         int pct = (int)(Math.min(this.currentProgress, 1.0f) * 100);
-        String label = pct + "%";
-        int textColor = (a & 0xFF000000) | 0xAADD88;
-        g.drawCenteredString(this.minecraft.font, label, sw / 2, barY - 12, textColor);
+        g.drawCenteredString(this.minecraft.font, pct + "%", sw / 2, barY - 12, textColor);
+    }
+
+    private static int applyAlpha(int rgb, int alphaBits) {
+        return (alphaBits & 0xFF000000) | (rgb & 0x00FFFFFF);
     }
 }
