@@ -75,14 +75,18 @@ public class MixinLoadingOverlay {
             }
         }
 
-        // Draw background
-        RenderSystem.enableBlend();
-        RenderSystem.defaultBlendFunc();
-        RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
+        // Draw background — blit may fail on early frames before GPU shaders init
+        g.fill(0, 0, sw, sh, 0xFF0D0D0D);
         if (hclient$bgLoc != null) {
-            g.blit(hclient$bgLoc, 0, 0, sw, sh, 0f, 0f, 2752, 1536, 2752, 1536);
-        } else {
-            g.fill(0, 0, sw, sh, 0xFF0D0D0D); // fallback dark background
+            try {
+                RenderSystem.enableBlend();
+                RenderSystem.defaultBlendFunc();
+                RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
+                g.blit(hclient$bgLoc, 0, 0, sw, sh, 0f, 0f, 2752, 1536, 2752, 1536);
+                RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
+            } catch (Exception ignored) {
+                // Shader not ready yet — dark fill shown above is the fallback
+            }
         }
 
         // Progress bar
