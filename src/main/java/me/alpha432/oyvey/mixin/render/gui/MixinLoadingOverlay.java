@@ -1,25 +1,25 @@
 package me.alpha432.oyvey.mixin.render.gui;
 
+import com.mojang.blaze3d.platform.NativeImage;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.LoadingOverlay;
+import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ReloadInstance;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.slf4j.LoggerFactory;
 
+import java.io.InputStream;
 import java.lang.reflect.Field;
 
 @Mixin(LoadingOverlay.class)
 public class MixinLoadingOverlay {
 
-    private static final ResourceLocation BG =
-        ResourceLocation.fromNamespaceAndPath("oyvey", "textures/gui/loading_bg.png");
-
-    // Resolved once via reflection to avoid refmap dependency
     private static Field FIELD_MC;
     private static Field FIELD_RELOAD;
 
@@ -27,22 +27,26 @@ public class MixinLoadingOverlay {
         try {
             for (Field f : LoadingOverlay.class.getDeclaredFields()) {
                 f.setAccessible(true);
-                if (f.getType() == Minecraft.class)       FIELD_MC     = f;
-                if (f.getType() == ReloadInstance.class)  FIELD_RELOAD = f;
+                if (f.getType() == Minecraft.class)      FIELD_MC    = f;
+                if (f.getType() == ReloadInstance.class) FIELD_RELOAD = f;
             }
         } catch (Exception ignored) {}
     }
+
+    // Loaded once from classpath — bypasses the not-yet-ready resource pack system
+    private static ResourceLocation hclient$bgLoc = null;
+    private static boolean          hclient$bgTried = false;
 
     private float hclient$progress = 0f;
 
     @Inject(method = "render", at = @At("HEAD"), cancellable = true)
     private void hclient$render(GuiGraphics g, int mouseX, int mouseY, float delta, CallbackInfo ci) {
-        if (FIELD_MC == null || FIELD_RELOAD == null) return; // fallback to vanilla
+        if (FIELD_MC == null || FIELD_RELOAD == null) return;
 
         Minecraft mc;
         ReloadInstance reload;
         try {
-            mc     = (Minecraft)     FIELD_MC.get(this);
+            mc     = (Minecraft)      FIELD_MC.get(this);
             reload = (ReloadInstance) FIELD_RELOAD.get(this);
         } catch (Exception e) { return; }
 
@@ -56,11 +60,30 @@ public class MixinLoadingOverlay {
         hclient$progress += (target - hclient$progress) * 0.1f;
         float p = Math.min(hclient$progress, 1.0f);
 
-        // Background image
+        // Load background texture from classpath on first render
+        if (!hclient$bgTried) {
+            hclient$bgTried = true;
+            try (InputStream in = MixinLoadingOverlay.class
+                    .getResourceAsStream("/assets/oyvey/textures/gui/loading_bg.png")) {
+                if (in != null) {
+                    NativeImage img = NativeImage.read(in);
+                    DynamicTexture tex = new DynamicTexture(img);
+                    hclient$bgLoc = mc.getTextureManager().register("hclient_loading_bg", tex);
+                }
+            } catch (Exception e) {
+                LoggerFactory.getLogger("HClient").warn("Could not load loading background: {}", e.getMessage());
+            }
+        }
+
+        // Draw background
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
         RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
-        g.blit(BG, 0, 0, sw, sh, 0f, 0f, 2752, 1536, 2752, 1536);
+        if (hclient$bgLoc != null) {
+            g.blit(hclient$bgLoc, 0, 0, sw, sh, 0f, 0f, 2752, 1536, 2752, 1536);
+        } else {
+            g.fill(0, 0, sw, sh, 0xFF0D0D0D); // fallback dark background
+        }
 
         // Progress bar
         int barW = (int)(sw * 0.45f);
