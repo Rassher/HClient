@@ -58,6 +58,8 @@ public class OyVey implements ModInitializer, ClientModInitializer {
         colorManager.init();
         Runtime.getRuntime().addShutdownHook(new Thread(() -> configManager.save()));
 
+        me.alpha432.oyvey.features.gui.update.UpdateChecker.INSTANCE.checkAsync();
+
         long endTime = System.nanoTime();
 
         LOGGER.info("Initialized {} in {}ms",

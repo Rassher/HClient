@@ -12,6 +12,8 @@ import net.minecraft.client.renderer.CubeMap;
 import net.minecraft.client.renderer.PanoramaRenderer;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.resources.ResourceLocation;
+import me.alpha432.oyvey.features.gui.update.HClientUpdateScreen;
+import me.alpha432.oyvey.features.gui.update.UpdateChecker;
 import net.fabricmc.loader.api.FabricLoader;
 
 import java.awt.*;
@@ -36,6 +38,9 @@ public class HClientTitleScreen extends TitleScreen {
     private float waveOffset = 0f;
     private static final float WAVE_SPEED = 10f;
     private static final float WAVE_RANGE = 200f;
+
+    // Show update screen only once per game session
+    private static boolean updateScreenShown = false;
 
     // Vanilla button references for particles mode
     private AbstractButton spBtn, mpBtn, optsBtn, modsBtn, quitBtn;
@@ -74,6 +79,13 @@ public class HClientTitleScreen extends TitleScreen {
         rebuildRenderer();
         if (titleBorderTex == null) buildTitleTextures();
         computeLayout();
+
+        if (!updateScreenShown && UpdateChecker.INSTANCE.getState() == UpdateChecker.State.UPDATE_AVAILABLE) {
+            updateScreenShown = true;
+            minecraft.setScreen(new HClientUpdateScreen(this,
+                UpdateChecker.INSTANCE.getLatestVersion(),
+                UpdateChecker.INSTANCE.getDownloadUrl()));
+        }
     }
 
     private void computeLayout() {
