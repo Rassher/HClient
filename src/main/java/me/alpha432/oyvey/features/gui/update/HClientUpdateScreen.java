@@ -197,12 +197,14 @@ public class HClientUpdateScreen extends Screen {
                 Path modsDir = FabricLoader.getInstance().getGameDir().resolve("mods");
                 File dest = modsDir.resolve("HClient-" + latestVersion + ".jar").toFile();
 
-                // Delete old HClient JARs (oyvey-*.jar and HClient-*.jar)
+                // Schedule old HClient JARs for deletion on JVM exit
+                // (Windows locks JARs loaded by the JVM, so immediate delete fails)
                 File[] old = modsDir.toFile().listFiles(f ->
                     (f.getName().startsWith("oyvey-") || f.getName().startsWith("HClient-"))
-                    && f.getName().endsWith(".jar") && !f.equals(dest));
+                    && f.getName().endsWith(".jar") && !f.getName().equals(dest.getName()));
                 if (old != null) Arrays.stream(old).forEach(f -> {
-                    if (f.delete()) LOGGER.info("Deleted old JAR: {}", f.getName());
+                    f.deleteOnExit();
+                    LOGGER.info("Scheduled for deletion on exit: {}", f.getName());
                 });
 
                 // Download new JAR with progress tracking
