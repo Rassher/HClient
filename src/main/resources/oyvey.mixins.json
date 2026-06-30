@@ -3,6 +3,7 @@
   "minVersion": "0.8",
   "package": "me.alpha432.oyvey.mixin",
   "compatibilityLevel": "JAVA_21",
+  "refmap": "oyvey.refmap.json",
   "mixins": [
     "network.MixinConnection"
   ],

@@ -6,80 +6,76 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.LoadingOverlay;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ReloadInstance;
-import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import java.lang.reflect.Field;
+
 @Mixin(LoadingOverlay.class)
 public class MixinLoadingOverlay {
 
-    private static final ResourceLocation BG = ResourceLocation.fromNamespaceAndPath("oyvey", "textures/gui/loading_bg.png");
+    private static final ResourceLocation BG =
+        ResourceLocation.fromNamespaceAndPath("oyvey", "textures/gui/loading_bg.png");
 
-    @Shadow @Final private Minecraft minecraft;
-    @Shadow @Final private ReloadInstance reload;
-    @Shadow private float currentProgress;
-    @Shadow private long fadeOutStart;   // -1 = not fading out
-    @Shadow @Final private boolean fadeIn;
+    // Resolved once via reflection to avoid refmap dependency
+    private static Field FIELD_MC;
+    private static Field FIELD_RELOAD;
+
+    static {
+        try {
+            for (Field f : LoadingOverlay.class.getDeclaredFields()) {
+                f.setAccessible(true);
+                if (f.getType() == Minecraft.class)       FIELD_MC     = f;
+                if (f.getType() == ReloadInstance.class)  FIELD_RELOAD = f;
+            }
+        } catch (Exception ignored) {}
+    }
+
+    private float hclient$progress = 0f;
 
     @Inject(method = "render", at = @At("HEAD"), cancellable = true)
     private void hclient$render(GuiGraphics g, int mouseX, int mouseY, float delta, CallbackInfo ci) {
+        if (FIELD_MC == null || FIELD_RELOAD == null) return; // fallback to vanilla
+
+        Minecraft mc;
+        ReloadInstance reload;
+        try {
+            mc     = (Minecraft)     FIELD_MC.get(this);
+            reload = (ReloadInstance) FIELD_RELOAD.get(this);
+        } catch (Exception e) { return; }
+
         ci.cancel();
 
-        int sw = this.minecraft.getWindow().getGuiScaledWidth();
-        int sh = this.minecraft.getWindow().getGuiScaledHeight();
+        int sw = mc.getWindow().getGuiScaledWidth();
+        int sh = mc.getWindow().getGuiScaledHeight();
 
         // Smooth progress
-        float target = this.reload.getActualProgress();
-        this.currentProgress = this.currentProgress + (target - this.currentProgress) * 0.1f;
+        float target = reload.getActualProgress();
+        hclient$progress += (target - hclient$progress) * 0.1f;
+        float p = Math.min(hclient$progress, 1.0f);
 
-        // Alpha: fade out when fadeOutStart is set (>= 0)
-        float alpha = 1.0f;
-        if (this.fadeOutStart >= 0) {
-            long elapsed = System.currentTimeMillis() - this.fadeOutStart;
-            alpha = 1.0f - Math.min(1.0f, elapsed / 1000.0f);
-        }
-
-        int a = (int)(alpha * 255) << 24;
-
-        // Background image stretched to fill screen
+        // Background image
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
-        RenderSystem.setShaderColor(1f, 1f, 1f, alpha);
-        g.blit(BG, 0, 0, sw, sh, 0f, 0f, 2752, 1536, 2752, 1536);
         RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
+        g.blit(BG, 0, 0, sw, sh, 0f, 0f, 2752, 1536, 2752, 1536);
 
-        // --- Progress bar ---
-        int barW  = (int)(sw * 0.45f);
-        int barH  = 8;
-        int barX  = sw / 2 - barW / 2;
-        int barY  = sh - 38;
-        int fill  = (int)(barW * Math.min(this.currentProgress, 1.0f));
+        // Progress bar
+        int barW = (int)(sw * 0.45f);
+        int barH = 8;
+        int barX = sw / 2 - barW / 2;
+        int barY = sh - 38;
+        int fill = (int)(barW * p);
 
-        int trackColor  = applyAlpha(0x1A1A1A, a);
-        int borderColor = applyAlpha(0x3A5A2A, a);
-        int fillColor   = applyAlpha(0x4A8A3A, a);
-        int glowColor   = applyAlpha(0x6ABF55, a);
-        int textColor   = applyAlpha(0xAADD88, a);
-
-        // Border
-        g.fill(barX - 1, barY - 1, barX + barW + 1, barY + barH + 1, borderColor);
-        // Track
-        g.fill(barX, barY, barX + barW, barY + barH, trackColor);
-        // Fill
+        g.fill(barX - 1, barY - 1, barX + barW + 1, barY + barH + 1, 0xFF3A5A2A);
+        g.fill(barX,     barY,     barX + barW,      barY + barH,     0xFF1A1A1A);
         if (fill > 0) {
-            g.fill(barX, barY, barX + fill, barY + barH, fillColor);
-            g.fill(barX, barY, barX + fill, barY + 2, glowColor); // highlight
+            g.fill(barX, barY, barX + fill, barY + barH, 0xFF4A8A3A);
+            g.fill(barX, barY, barX + fill, barY + 2,    0xFF6ABF55);
         }
 
-        // Percentage
-        int pct = (int)(Math.min(this.currentProgress, 1.0f) * 100);
-        g.drawCenteredString(this.minecraft.font, pct + "%", sw / 2, barY - 12, textColor);
-    }
-
-    private static int applyAlpha(int rgb, int alphaBits) {
-        return (alphaBits & 0xFF000000) | (rgb & 0x00FFFFFF);
+        g.drawCenteredString(mc.font, (int)(p * 100) + "%", sw / 2, barY - 12, 0xFFAADD88);
     }
 }

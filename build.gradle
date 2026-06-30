@@ -40,6 +40,9 @@ repositories {
 
 loom {
     accessWidenerPath = file("src/main/resources/oyvey.accesswidener")
+    mixin {
+        defaultRefmapName = "oyvey.refmap.json"
+    }
 }
 
 dependencies {
