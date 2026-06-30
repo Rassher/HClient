@@ -17,6 +17,7 @@
     "render.gui.MixinCommandSuggestions",
     "render.gui.MixinGui",
     "render.gui.MixinJoinMultiplayerScreen",
+    "render.gui.MixinLoadingOverlay",
     "render.gui.MixinTitleScreen"
   ],
   "injectors": {
