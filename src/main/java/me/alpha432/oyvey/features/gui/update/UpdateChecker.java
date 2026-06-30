@@ -30,6 +30,7 @@ public class UpdateChecker {
             try {
                 HttpClient client = HttpClient.newBuilder()
                     .connectTimeout(Duration.ofSeconds(8))
+                    .followRedirects(java.net.http.HttpClient.Redirect.ALWAYS)
                     .build();
                 HttpRequest req = HttpRequest.newBuilder()
                     .uri(URI.create(API_URL))

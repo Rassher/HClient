@@ -206,7 +206,10 @@ public class HClientUpdateScreen extends Screen {
                 });
 
                 // Download new JAR with progress tracking
-                HttpClient client = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(10)).build();
+                HttpClient client = HttpClient.newBuilder()
+                    .connectTimeout(Duration.ofSeconds(10))
+                    .followRedirects(HttpClient.Redirect.ALWAYS)
+                    .build();
                 HttpRequest req = HttpRequest.newBuilder()
                     .uri(URI.create(downloadUrl))
                     .header("User-Agent", "HClient-Updater")
